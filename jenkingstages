@@ -1,0 +1,25 @@
+pipeline {
+   agent any
+    tools{
+        maven 'Maven'
+        jdk 'jdk8'
+    }
+   stages {
+      stage('Checkout') {
+         steps {
+            checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/wikashrai/spring-petclinic']]])
+         }
+      }
+      
+      stage('Build') {
+         steps {
+            bat 'mvn clean package'
+         }
+      }
+      stage('Code Revie') {
+         steps {
+            bat 'mvn sonar:sonar'
+         }
+      }
+   }
+}
